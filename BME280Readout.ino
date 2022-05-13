@@ -75,12 +75,13 @@ void printValues() {
     
 
     Serial.print(bme.readPressure() / 100.0F);
-    Serial.print(", ");
+    Serial.print(": ");
     
     Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
-    Serial.print(", ");
+    Serial.print("; ");
 
     Serial.print(bme.readHumidity());
+    Serial.print("-");
  
 
     Serial.println();
