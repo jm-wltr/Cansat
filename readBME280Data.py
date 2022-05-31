@@ -8,10 +8,10 @@ A = []
 H = []
 
 fig = plt.figure()
-t_ax = fig.add_subplot(221, title="Temperature graph")
-p_ax = fig.add_subplot(222, title="Pressure graph")
-a_ax = fig.add_subplot(223, title="Altitude graph")
-h_ax = fig.add_subplot(224, title="Humidity graph")
+t_ax = fig.add_subplot(221, title="Temperature graph", ylabel = "θ/ºC")
+p_ax = fig.add_subplot(222, title="Pressure graph", ylabel = "p/hPa")
+a_ax = fig.add_subplot(223, title="Altitude graph", ylabel = "A/m")
+h_ax = fig.add_subplot(224, title="Relative humidity graph", ylabel = "%RH")
 plt.tight_layout()
 
 cansatConn = serial.Serial("com8", "9600")
@@ -43,4 +43,3 @@ while True:
         h_ax.plot(np.arange(len(H)), H, color="blue")
         
         plt.pause(0.001)
-        
