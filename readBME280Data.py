@@ -1,5 +1,6 @@
-import time as tm
-import random
+import serial
+import matplotlib.pyplot as plt
+import numpy as np
 
 T = []
 P = []
@@ -13,7 +14,7 @@ a_ax = fig.add_subplot(223, title="Altitude graph")
 h_ax = fig.add_subplot(224, title="Humidity graph")
 plt.tight_layout()
 
-# cansatConn = serial.Serial("com4", "9600")
+cansatConn = serial.Serial("com8", "9600")
 
 while True:
     if (cansatConn.inWaiting()>0):
