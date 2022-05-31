@@ -1,6 +1,3 @@
-import serial
-import matplotlib.pyplot as plt
-import numpy as np
 import time as tm
 import random
 
@@ -8,7 +5,6 @@ T = []
 P = []
 A = []
 H = []
-lists = [T, P, A, H]
 
 fig = plt.figure()
 t_ax = fig.add_subplot(221, title="Temperature graph")
@@ -20,28 +16,25 @@ plt.tight_layout()
 # cansatConn = serial.Serial("com4", "9600")
 
 while True:
-    # if (cansatConn.inWaiting()>0):
-    #     data = str(cansatConn.readline())
-    #     print(data)
-    #     #slicing strings
-    #     aposPos = data.find("'")
-    #     comaPos = data.find(",")
-    #     comaPos2 = data.find(",",comaPos + 1)
-    #     comaPos3 = data.find(",", comaPos2 + 1)
-    #     dashPos = data.find("\\")
+    if (cansatConn.inWaiting()>0):
+        data = str(cansatConn.readline())
+        print(data)
+        #slicing strings
+        aposPos = data.find("'")
+        comaPos = data.find(",")
+        comaPos2 = data.find(",",comaPos + 1)
+        comaPos3 = data.find(",", comaPos2 + 1)
+        dashPos = data.find("\\")
 
-    #     temperature = data[aposPos + 1: comaPos]
-    #     pressure = data[comaPos + 2: comaPos2]
-    #     altitude = data[comaPos2 + 2: comaPos3]
-    #     humidity = data[comaPos3 + 2: dashPos]
+        temperature = data[aposPos + 1: comaPos]
+        pressure = data[comaPos + 2: comaPos2]
+        altitude = data[comaPos2 + 2: comaPos3]
+        humidity = data[comaPos3 + 2: dashPos]
 
-        # printing values (variables)
-        tm.sleep(1)
-
-        T.append(random.uniform(0,10))
-        P.append(random.uniform(0,10))
-        A.append(random.uniform(0,10))
-        H.append(random.uniform(0,10))
+        T.append(float(temperature))
+        P.append(float(pressure))
+        A.append(float(altitude))
+        H.append(float(humidity))
         
         t_ax.plot(np.arange(len(T)), T, color="blue")
         p_ax.plot(np.arange(len(P)), P, color="blue")
