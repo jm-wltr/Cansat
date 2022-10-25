@@ -71,12 +71,12 @@ void printValues() {
     
  
 
-    Serial.println();
+    Serial.print(", ");
 }
 
 void loop() { 
     printValues();
-    delay(delayTime);
+    delay(10); //used to be delayTime
 
     uint16_t    UvaRaw = VEML6075.readUvaRaw();         // read UVA raw
   uint16_t    UvbRaw = VEML6075.readUvbRaw();         // read UVB raw
@@ -87,33 +87,33 @@ void loop() {
   float       Uvb = VEML6075.getUvb();                // get UVB
   float       Uvi = VEML6075.getUvi(Uva, Uvb);        // get UV index
 
-  Serial.println();
-  Serial.print("UVA raw:    "); //radiation FROM THE SUN with fairly long wavelengths. (for UVA from 350 nm to 375 nm)
-  Serial.println(UvaRaw);
-  Serial.print("UVB raw:    "); //It can come from natural sources, such as sunlight, as well as artificial sourcesrange (for UVB is from 315 nm to 340 nm)
-  Serial.println(UvbRaw);
-  Serial.print("COMP1 raw:  ");
-  Serial.println(comp1Raw);
-  Serial.print("COMP2 raw:  ");
-  Serial.println(comp2Raw);
-  Serial.print("UVA:        ");
-  Serial.println(Uva, 2);
-  Serial.print("UVB:        ");
-  Serial.println(Uvb, 2);
-  Serial.print("UVIndex:    ");
-  Serial.print(Uvi, 2);
-  if(Uvi < UVI_LOW)
-    Serial.println("  UVI low");
-  else if(Uvi < UVI_MODERATE)
-    Serial.println("  UVI moderate");
-  else if(Uvi < UVI_HIGH)
-    Serial.println("  UVI high");
-  else if(Uvi < UVI_VERY_HIGH)
-    Serial.println("  UVI very high");
-  else
-    Serial.println("  UVI extreme");
-  Serial.print("mw/cm^2:    ");
-  Serial.println(Uvi2mwpcm2(Uvi), 2);
+
+  Serial.print(UvaRaw); //UVA raw: radiation FROM THE SUN with fairly long wavelengths. (for UVA from 350 nm to 375 nm)
+  Serial.print(", ");
+  Serial.print(UvbRaw); //UVB raw: It can come from natural sources, such as sunlight, as well as artificial sourcesrange (for UVB is from 315 nm to 340 nm)
+  Serial.print(", ");
+  Serial.print(comp1Raw); //COMP1 raw
+  Serial.print(", ");  
+  Serial.print(comp2Raw);
+  Serial.print(", ");  
+  Serial.print(Uva, 2); //UVA
+  Serial.print(", ");
+  Serial.print(Uvb, 2); //UVB
+  Serial.print(", ");
+  Serial.print(Uvi, 2); //UVI index
+  Serial.print(", ");
+  //if(Uvi < UVI_LOW)
+  //  Serial.println("  UVI low");
+  //else if(Uvi < UVI_MODERATE)
+  //  Serial.println("  UVI moderate");
+  //else if(Uvi < UVI_HIGH)
+  //  Serial.println("  UVI high");
+  //else if(Uvi < UVI_VERY_HIGH)
+  //  Serial.println("  UVI very high");
+  //else
+  //  Serial.println("  UVI extreme");
+  Serial.print(Uvi2mwpcm2(Uvi), 2); // mw/cm^2
+  Serial.print(", ");
   Serial.print("\n");
-  delay(1000);
+  delay(990); //used to be 1000
 }
