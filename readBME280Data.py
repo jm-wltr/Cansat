@@ -4,20 +4,6 @@ import numpy as np
 import mariadb
 import sys
 
-T = []
-P = []
-H = []
-A = []
-
-fig = plt.figure()
-t_ax = fig.add_subplot(221, title="Temperature graph", ylabel = "θ/ºC")
-p_ax = fig.add_subplot(222, title="Pressure graph", ylabel = "p/hPa")
-a_ax = fig.add_subplot(223, title="Altitude graph", ylabel = "A/m")
-h_ax = fig.add_subplot(224, title="Relative humidity graph", ylabel = "%RH")
-plt.tight_layout()
-
-cansatConn = serial.Serial("com8", "9600")
-
 try:
     conn = mariadb.connect(
         user = "root",
@@ -31,39 +17,32 @@ except mariadb.Error as e:
     print(f"Error onnecting to MariaDB Platform: {e}")
     sys.exit(1)
 
-with conn.cursor() as cur:
+with serial.Serial("com8", "9600") as cansatConn:
+    with conn.cursor() as cur:
 
-    while True:
-        if (cansatConn.inWaiting()>0):
-            data = str(cansatConn.readline())
-            print(data)
-            #slicing strings
-            aposPos = data.find("'")
-            comaPos = data.find(",")
-            comaPos2 = data.find(",",comaPos + 1)
-            comaPos3 = data.find(",", comaPos2 + 1)
-            dashPos = data.find("\\")
+        while True:
+            if (cansatConn.inWaiting()>0):
+                data = str(cansatConn.readline())
+                data = data.replace("\n", "").replace("\\n", "").replace("b", "").replace(" ", "")
+                data = data.split(",")
+                datareplace = data[0].replace("'", "")
+                data.pop(0)
+                data.insert(0, datareplace)
+                data.pop(len(data)-1)
+                if len(data) == 12:
+                    print(data)
+                    
+                    
 
-            temperature = data[aposPos + 1: comaPos]
-            pressure = data[comaPos + 2: comaPos2]
-            altitude = data[comaPos2 + 2: comaPos3]
-            humidity = data[comaPos3 + 2: dashPos]
+                    cur.execute(
+                    "INSERT INTO datatable1 (temperature, pressure, altitude, humidity, uva_raw, uvb_raw, comp1_raw, comp2_raw, uva, uvb, uvi, uvi_mwpcm2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                    (data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11]))
 
-            cur.execute(
-            "INSERT INTO datatable1 (temperature, pressure, altitude, humidity) VALUES (?, ?, ?, ?);",
-            (temperature, pressure, altitude, humidity))
+                    conn.commit()
+                    
+                else:
+                    print("Please wait recalibrating")
 
-            conn.commit() 
+                
 
-            T.append(float(temperature))
-            P.append(float(pressure))
-            A.append(float(altitude))
-            H.append(float(humidity))
-
-            t_ax.plot(np.arange(len(T)), T, color="blue")
-            p_ax.plot(np.arange(len(P)), P, color="blue")
-            a_ax.plot(np.arange(len(A)), A, color="blue")
-            h_ax.plot(np.arange(len(H)), H, color="blue")
-
-            plt.pause(0.001)
 
